@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Cinzel", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-gold-pure: #D4AF37;
+  --color-gold-champagne: #F3E5AB;
+  --color-gold-antique: #8C6C15;
+  --color-onyx-canvas: #0A0C0E;
+  --color-onyx-surface: #111418;
+  --color-onyx-card: #181C22;
+  --color-onyx-elevated: #1F252E;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: #0A0C0E;
+    color: #E5E7EB;
+  }
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 52%, #9C7818 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gold-action-btn {
+  background: linear-gradient(135deg, #E5C768 0%, #D4AF37 55%, #8C6C15 100%);
+  color: #0A0C0E;
+  box-shadow: 0 8px 24px -6px rgba(140, 108, 21, 0.45);
+}
+
+.gold-action-btn:hover {
+  background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 55%, #A6811C 100%);
+  box-shadow: 0 10px 28px -4px rgba(212, 175, 55, 0.5);
+}
+
+/* Subtle gold sheen micro-interaction on 1:1 profile frame */
+.gold-sheen-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.gold-sheen-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(243, 229, 171, 0.22) 45%,
+    rgba(212, 175, 55, 0.32) 50%,
+    rgba(243, 229, 171, 0.12) 55%,
+    transparent 80%
+  );
+  transform: translateX(-130%) skewX(-18deg);
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.gold-sheen-container:hover::after,
+.gold-sheen-container:focus-within::after {
+  transform: translateX(130%) skewX(-18deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gold-sheen-container::after {
+    transition: none;
+    display: none;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle dark scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0A0C0E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222832;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.45);
+}

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRD - Website Portfolio Aries Ambara (Luxury Gold)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: {
+              300: '#F5E6B3',
+              400: '#E5C768',
+              500: '#D4AF37',
+              600: '#B89225',
+              700: '#8C6C15'
+            },
+            onyx: {
+              950: '#0A0C0E',
+              900: '#111418',
+              800: '#181C22',
+              700: '#222832',
+              600: '#2E3644'
+            }
+          },
+          fontFamily: {
+            display: ['Cinzel', 'serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #FFF1C5 0%, #D4AF37 50%, #AA8018 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-border-glow {
+      box-shadow: 0 0 25px -5px rgba(212, 175, 55, 0.15);
+    }
+  </style>
+</head>
+<body class="bg-onyx-950 text-neutral-200 font-sans antialiased min-h-screen">
+
+  <!-- Header Sticky Navigation -->
+  <header class="border-b border-gold-500/20 bg-onyx-900/90 backdrop-blur-md sticky top-0 z-50 px-4 lg:px-8 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full border border-gold-500/40 bg-gradient-to-tr from-onyx-950 via-onyx-800 to-gold-600/30 flex items-center justify-center font-display font-bold text-gold-400 text-lg shadow-inner">
+          AA
+        </div>
+        <div>
+          <span class="font-display font-bold text-gold-300 text-base tracking-wider block">ARIES AMBARA</span>
+          <span class="text-[10px] tracking-widest text-gold-500 uppercase block">Product Requirement Document</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gold-500/10 text-gold-400 border border-gold-500/30">
+          v1.0 • Luxury Gold Edition
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 lg:px-8 py-8 space-y-12">
+    
+    <!-- Hero Section / Executive Summary -->
+    <section class="relative overflow-hidden rounded-2xl border border-gold-500/30 bg-gradient-to-br from-onyx-900 via-onyx-950 to-onyx-900 p-6 lg:p-10 gold-border-glow">
+      <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-gold-500/10 blur-3xl pointer-events-none"></div>
+      <div class="max-w-3xl space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-gold-500/15 border border-gold-500/30 text-gold-400 text-xs font-semibold uppercase tracking-widest">
+          Executive Document
+        </div>
+        <h1 class="text-3xl lg:text-5xl font-display font-bold gold-gradient-text tracking-wide leading-tight">
+          Website Portfolio Eksklusif Aries Ambara
+        </h1>
+        <p class="text-neutral-300 text-sm lg:text-base leading-relaxed">
+          Spesifikasi rancang bangun platform portofolio digital level eksekutif dengan struktur layout berorientasi hasil terstruktur, dilengkapi kapabilitas integrasi data manual & massal, serta balutan tema visual <strong>High-end Luxury Gold</strong>.
+        </p>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-8 border-t border-gold-500/20">
+        <div class="p-3 rounded-lg bg-onyx-800/40 border border-gold-500/15">
+          <div class="text-xs text-neutral-400">Target Visual</div>
+          <div class="text-sm font-semibold text-gold-300 mt-1">Luxury Gold & Onyx</div>
+        </div>
+        <div class="p-3 rounded-lg bg-onyx-800/40 border border-gold-500/15">
+          <div class="text-xs text-neutral-400">Metode Data Input</div>
+          <div class="text-sm font-semibold text-gold-300 mt-1">Manual & Bulk (JSON/CSV)</div>
+        </div>
+        <div class="p-3 rounded-lg bg-onyx-800/40 border border-gold-500/15">
+          <div class="text-xs text-neutral-400">Desain Basis</div>
+          <div class="text-sm font-semibold text-gold-300 mt-1">Struktur Modern Sidebar</div>
+        </div>
+        <div class="p-3 rounded-lg bg-onyx-800/40 border border-gold-500/15">
+          <div class="text-xs text-neutral-400">Device Ready</div>
+          <div class="text-sm font-semibold text-gold-300 mt-1">Mobile & Desktop Fluid</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visual Architecture & Color Scheme -->
+    <section class="space-y-6">
+      <div class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-gold-500/20 border border-gold-500/40 flex items-center justify-center text-gold-400 font-display font-bold">01</span>
+        <h2 class="text-xl lg:text-2xl font-display font-bold text-white tracking-wide">Palet Warna Luxury Gold</h2>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div class="p-4 rounded-xl bg-onyx-900 border border-gold-500/30 flex flex-col justify-between h-32">
+          <div class="w-8 h-8 rounded-full bg-[#D4AF37] border border-white/20"></div>
+          <div>
+            <div class="text-xs font-bold text-gold-400">Pure Gold</div>
+            <div class="text-[11px] text-neutral-400 font-mono">#D4AF37</div>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-onyx-900 border border-gold-500/30 flex flex-col justify-between h-32">
+          <div class="w-8 h-8 rounded-full bg-[#F3E5AB] border border-white/20"></div>
+          <div>
+            <div class="text-xs font-bold text-gold-300">Champagne</div>
+            <div class="text-[11px] text-neutral-400 font-mono">#F3E5AB</div>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-onyx-900 border border-gold-500/30 flex flex-col justify-between h-32">
+          <div class="w-8 h-8 rounded-full bg-[#8C6C15] border border-white/20"></div>
+          <div>
+            <div class="text-xs font-bold text-gold-600">Antique Gold</div>
+            <div class="text-[11px] text-neutral-400 font-mono">#8C6C15</div>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-onyx-900 border border-gold-500/30 flex flex-col justify-between h-32">
+          <div class="w-8 h-8 rounded-full bg-[#0A0C0E] border border-gold-500/40"></div>
+          <div>
+            <div class="text-xs font-bold text-neutral-300">Obsidian Onyx</div>
+            <div class="text-[11px] text-neutral-400 font-mono">#0A0C0E</div>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-onyx-900 border border-gold-500/30 flex flex-col justify-between h-32">
+          <div class="w-8 h-8 rounded-full bg-[#181C22] border border-gold-500/40"></div>
+          <div>
+            <div class="text-xs font-bold text-neutral-300">Card Surface</div>
+            <div class="text-[11px] text-neutral-400 font-mono">#181C22</div>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-onyx-900 border border-gold-500/30 flex flex-col justify-between h-32">
+          <div class="w-8 h-8 rounded-full bg-[rgba(212,175,55,0.25)] border border-gold-500/50"></div>
+          <div>
+            <div class="text-xs font-bold text-gold-400">Gold Accent Line</div>
+            <div class="text-[11px] text-neutral-400 font-mono">rgba(Gold, 25%)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Feature Architecture -->
+    <section class="space-y-6">
+      <div class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-gold-500/20 border border-gold-500/40 flex items-center justify-center text-gold-400 font-display font-bold">02</span>
+        <h2 class="text-xl lg:text-2xl font-display font-bold text-white tracking-wide">Spesifikasi Modul Halaman & Konten</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        
+        <!-- Section 1 -->
+        <div class="p-6 rounded-xl bg-onyx-900/80 border border-gold-500/25 hover:border-gold-500/50 transition space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-gold-500 font-semibold">SECTION 01</span>
+            <span class="px-2 py-0.5 rounded text-[10px] bg-gold-500/10 text-gold-400 border border-gold-500/30">Primary</span>
+          </div>
+          <h3 class="text-lg font-bold text-white">About Me & Strategic Value</h3>
+          <p class="text-neutral-400 text-xs leading-relaxed">
+            Menampilkan profil naratif Aries Ambara, filosofi "Commercial Thinking & Practical Solutions", mitra brand yang didukung, serta kartu kontribusi strategis.
+          </p>
+          <ul class="text-xs space-y-1 text-neutral-300 list-disc list-inside">
+            <li>Hero headline tipografi luxury</li>
+            <li>List brand didukung beraksen tautan gold</li>
+            <li>Grid value contribution cards</li>
+          </ul>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="p-6 rounded-xl bg-onyx-900/80 border border-gold-500/25 hover:border-gold-500/50 transition space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-gold-500 font-semibold">SECTION 02</span>
+            <span class="px-2 py-0.5 rounded text-[10px] bg-gold-500/10 text-gold-400 border border-gold-500/30">Conversion</span>
+          </div>
+          <h3 class="text-lg font-bold text-white">Direct Connect & Consultation</h3>
+          <p class="text-neutral-400 text-xs leading-relaxed">
+            Akses instan kolaborasi via WhatsApp direct chat dan formulir inquiry proyek dengan filter kategori minat bisnis.
+          </p>
+          <ul class="text-xs space-y-1 text-neutral-300 list-disc list-inside">
+            <li>Integrasi One-click WhatsApp CTA</li>
+            <li>Form input name, contact & scope</li>
+            <li>Email automated routing</li>
+          </ul>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="p-6 rounded-xl bg-onyx-900/80 border border-gold-500/25 hover:border-gold-500/50 transition space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-gold-500 font-semibold">SECTION 03</span>
+            <span class="px-2 py-0.5 rounded text-[10px] bg-gold-500/10 text-gold-400 border border-gold-500/30">Timeline</span>
+          </div>
+          <h3 class="text-lg font-bold text-white">Experience & Career Track</h3>
+          <p class="text-neutral-400 text-xs leading-relaxed">
+            Rekam jejak kepemimpinan dan kontribusi profesional disusun vertikal teratur dengan badge status periode dan highlight peran.
+          </p>
+          <ul class="text-xs space-y-1 text-neutral-300 list-disc list-inside">
+            <li>Badge status peran terkini (Current Role)</li>
+            <li>Daftar bullet pencapaian & KPI</li>
+            <li>Koleksi portofolio per penugasan</li>
+          </ul>
+        </div>
+
+        <!-- Section 4 -->
+        <div class="p-6 rounded-xl bg-onyx-900/80 border border-gold-500/25 hover:border-gold-500/50 transition space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-gold-500 font-semibold">SECTION 04</span>
+            <span class="px-2 py-0.5 rounded text-[10px] bg-gold-500/10 text-gold-400 border border-gold-500/30">Credentials</span>
+          </div>
+          <h3 class="text-lg font-bold text-white">Education & Continuous Learning</h3>
+          <p class="text-neutral-400 text-xs leading-relaxed">
+            Dokumentasi gelar akademis formal terverifikasi serta fokus pengembangan kompetensi mutakhir.
+          </p>
+          <ul class="text-xs space-y-1 text-neutral-300 list-disc list-inside">
+            <li>Pendidikan formal perguruan tinggi</li>
+            <li>Fokus keahlian praktis terapan</li>
+            <li>Sertifikasi terakreditasi</li>
+          </ul>
+        </div>
+
+        <!-- Section 5 -->
+        <div class="p-6 rounded-xl bg-onyx-900/80 border border-gold-500/25 hover:border-gold-500/50 transition space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-gold-500 font-semibold">SECTION 05</span>
+            <span class="px-2 py-0.5 rounded text-[10px] bg-gold-500/10 text-gold-400 border border-gold-500/30">Stack</span>
+          </div>
+          <h3 class="text-lg font-bold text-white">Skills, Tools & Technologies</h3>
+          <p class="text-neutral-400 text-xs leading-relaxed">
+            Matriks keahlian menyeluruh mencakup Performance Marketing, Conversion Tracking, SEO, hingga Web Platform Dev.
+          </p>
+          <ul class="text-xs space-y-1 text-neutral-300 list-disc list-inside">
+            <li>Kategori modular dengan ikon tematik</li>
+            <li>Tag pill beraksen gold satin</li>
+            <li>Deskripsi implementasi di industri</li>
+          </ul>
+        </div>
+
+        <!-- Section 6 & 7 -->
+        <div class="p-6 rounded-xl bg-onyx-900/80 border border-gold-500/25 hover:border-gold-500/50 transition space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono text-gold-500 font-semibold">SECTION 06 & 07</span>
+            <span class="px-2 py-0.5 rounded text-[10px] bg-gold-500/10 text-gold-400 border border-gold-500/30">Showcase</span>
+          </div>
+          <h3 class="text-lg font-bold text-white">Selected Works & Live Projects</h3>
+          <p class="text-neutral-400 text-xs leading-relaxed">
+            Katalog studi kasus teruji dan platform yang sedang dikembangkan secara live ("Built in the open").
+          </p>
+          <ul class="text-xs space-y-1 text-neutral-300 list-disc list-inside">
+            <li>Badge status status: Ongoing / In Dev</li>
+            <li>External direct case study link</li>
+            <li>Stack tech chips & metrik dampak</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Data Ingestion Architecture: Manual & Bulk -->
+    <section class="p-6 lg:p-8 rounded-2xl bg-onyx-900 border border-gold-500/30 space-y-6">
+      <div class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-gold-500/20 border border-gold-500/40 flex items-center justify-center text-gold-400 font-display font-bold">03</span>
+        <h2 class="text-xl lg:text-2xl font-display font-bold text-white tracking-wide">Mekanisme Pengisian Data: Manual vs Massal</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Manual Input -->
+        <div class="p-5 rounded-xl bg-onyx-950 border border-gold-500/20 space-y-4">
+          <div class="flex items-center gap-2 text-gold-400 font-bold text-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+            Metode A: Input Manual (CMS & Quick Form)
+          </div>
+          <p class="text-xs text-neutral-400 leading-relaxed">
+            Dirancang untuk penambahan dan kurasi data harian atau perbaikan deskripsi secara cepat:
+          </p>
+          <div class="space-y-2 text-xs text-neutral-300">
+            <div class="p-2.5 rounded bg-onyx-900 border border-gold-500/10 flex items-start gap-2">
+              <span class="text-gold-500 font-bold">✓</span>
+              <span><strong>Form Input Visual:</strong> Menambah item pengalaman, portofolio baru, atau mengubah link kontak secara interaktif.</span>
+            </div>
+            <div class="p-2.5 rounded bg-onyx-900 border border-gold-500/10 flex items-start gap-2">
+              <span class="text-gold-500 font-bold">✓</span>
+              <span><strong>Image Cropper & Optimizer:</strong> Menyesuaikan foto profil Aries Ambara dan aset gambar proyek secara otomatis ke format WebP terkompresi.</span>
+            </div>
+            <div class="p-2.5 rounded bg-onyx-900 border border-gold-500/10 flex items-start gap-2">
+              <span class="text-gold-500 font-bold">✓</span>
+              <span><strong>Live Preview Toggle:</strong> Meninjau hasil tampilan di mockup mobile dan desktop sebelum diterbitkan.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bulk Input -->
+        <div class="p-5 rounded-xl bg-onyx-950 border border-gold-500/20 space-y-4">
+          <div class="flex items-center gap-2 text-gold-400 font-bold text-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+            Metode B: Input Massal (Bulk JSON / CSV Importer)
+          </div>
+          <p class="text-xs text-neutral-400 leading-relaxed">
+            Disediakan untuk migrasi data riwayat karier dalam jumlah besar tanpa input berulang:
+          </p>
+          <div class="space-y-2 text-xs text-neutral-300">
+            <div class="p-2.5 rounded bg-onyx-900 border border-gold-500/10 flex items-start gap-2">
+              <span class="text-gold-500 font-bold">✓</span>
+              <span><strong>JSON Schema Upload:</strong> Struktur standar untuk mengunggah seluruh riwayat pekerjaan, portfolio, dan skills sekaligus.</span>
+            </div>
+            <div class="p-2.5 rounded bg-onyx-900 border border-gold-500/10 flex items-start gap-2">
+              <span class="text-gold-500 font-bold">✓</span>
+              <span><strong>CSV/Spreadsheet Importer:</strong> Aries dapat mengisi spreadsheet Excel/Google Sheets lalu mengunggahnya langsung.</span>
+            </div>
+            <div class="p-2.5 rounded bg-onyx-900 border border-gold-500/10 flex items-start gap-2">
+              <span class="text-gold-500 font-bold">✓</span>
+              <span><strong>Data Validation Engine:</strong> Validasi otomatis format tanggal, status proyek, dan ketersediaan tautan eksternal.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- JSON Structure Sample -->
+      <div class="p-4 rounded-xl bg-onyx-950 border border-gold-500/20">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-mono text-gold-400">Contoh Schema JSON untuk Import Massal</span>
+          <span class="text-[10px] text-neutral-500 font-mono">portfolio_data_schema.json</span>
+        </div>
+        <pre class="text-[11px] font-mono text-neutral-300 overflow-x-auto p-3 rounded bg-onyx-900 border border-gold-500/10 leading-relaxed">
+{
+  "profile": {
+    "name": "Aries Ambara",
+    "title": "Digital Marketer & AI Solutions Developer",
+    "location": "Bali, Indonesia",
+    "theme": "luxury_gold"
+  },
+  "experiences": [
+    {
+      "role": "Assistant Digital Marketing Manager",
+      "company": "Kanaan Hospitality, Bali",
+      "period": "Jan 2026 - Present",
+      "status": "Current role",
+      "highlights": ["Meta, Google & TikTok Strategy", "Funnel measurement"]
+    }
+  ],
+  "portfolio_items": [
+    {
+      "title": "Bali Property List — Property Listing Platform",
+      "category": "Property Platform",
+      "status": "In Development",
+      "tech_stack": ["Laravel", "MariaDB", "Membership"]
+    }
+  ]
+}</pre>
+      </div>
+    </section>
+
+    <!-- Photo Integration in PRD -->
+    <section class="space-y-6">
+      <div class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-gold-500/20 border border-gold-500/40 flex items-center justify-center text-gold-400 font-display font-bold">04</span>
+        <h2 class="text-xl lg:text-2xl font-display font-bold text-white tracking-wide">Aset Visual & Standar Foto Profil</h2>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-onyx-900 border border-gold-500/30 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+        <!-- Visual Frame Mockup -->
+        <div class="flex flex-col items-center justify-center p-6 rounded-xl bg-onyx-950 border border-gold-500/40 relative">
+          <div class="w-36 h-36 rounded-full p-1 bg-gradient-to-tr from-gold-600 via-gold-400 to-gold-700 shadow-lg shadow-gold-500/20 flex items-center justify-center">
+            <div class="w-full h-full rounded-full bg-onyx-900 flex flex-col items-center justify-center text-center p-2">
+              <span class="font-display font-bold text-2xl text-gold-400 tracking-wider">AA</span>
+              <span class="text-[9px] uppercase tracking-widest text-gold-500 mt-1">Aries Ambara</span>
+            </div>
+          </div>
+          <span class="mt-4 px-3 py-1 rounded-full text-[10px] font-semibold bg-gold-500/10 text-gold-400 border border-gold-500/30">
+            Gold Ring Frame Spec
+          </span>
+        </div>
+
+        <!-- Photo Guideline Specs -->
+        <div class="md:col-span-2 space-y-3">
+          <h3 class="text-base font-bold text-white">Panduan Visual Foto Aries Ambara:</h3>
+          <p class="text-xs text-neutral-300 leading-relaxed">
+            Foto profil utama di website harus mencerminkan kredibilitas eksekutif dan kemewahan modern yang selaras dengan palet gold:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs">
+            <div class="p-3 rounded-lg bg-onyx-950 border border-gold-500/15">
+              <span class="text-gold-400 font-bold block mb-1">Tone & Lighting</span>
+              <span class="text-neutral-400">Pencahayaan studio kontras hangat (warm rim-light) berlatar gelap pekat atau charcoal minimalis.</span>
+            </div>
+            <div class="p-3 rounded-lg bg-onyx-950 border border-gold-500/15">
+              <span class="text-gold-400 font-bold block mb-1">Dress Code</span>
+              <span class="text-neutral-400">Setelan jas formal / smart casual berwarna hitam, navy gelap, atau aksen earth tone mewah.</span>
+            </div>
+            <div class="p-3 rounded-lg bg-onyx-950 border border-gold-500/15">
+              <span class="text-gold-400 font-bold block mb-1">Aspect Ratio & Format</span>
+              <span class="text-neutral-400">1:1 rasio portrait circular frame, format WebP resolusi retina (min. 800x800px).</span>
+            </div>
+            <div class="p-3 rounded-lg bg-onyx-950 border border-gold-500/15">
+              <span class="text-gold-400 font-bold block mb-1">Micro-Interactions</span>
+              <span class="text-neutral-400">Efek glow halus keemasan (subtle gold sheen) saat foto disentuh atau di-hover.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer Summary -->
+    <footer class="pt-8 border-t border-gold-500/20 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4">
+      <div>
+        Dokumen PRD resmi untuk pengembangan Website Portfolio Aries Ambara.
+      </div>
+      <div class="flex items-center gap-4 text-gold-500/80 font-mono text-[11px]">
+        <span>Status: Disetujui untuk Tahap Desain UI</span>
+        <span>•</span>
+        <span>Est. Selesai: 2026</span>
+      </div>
+    </footer>
+
+  </main>
+</body>
+</html>
