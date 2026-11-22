@@ -3,12 +3,7 @@ import express from 'express';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import statusHandler from './api/auth/status.ts';
-import setupHandler from './api/auth/setup.ts';
-import loginHandler from './api/auth/login.ts';
-import logoutHandler from './api/auth/logout.ts';
-import portfolioHandler from './api/portfolio.ts';
-import inquiriesHandler from './api/inquiries.ts';
+import apiHandler from './api/index.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,24 +14,9 @@ async function startServer() {
 
   app.use(express.json({ limit: '2mb' }));
 
-  // Mount API routes matching Vercel Serverless Functions
-  app.all('/api/auth/status', (req, res) => {
-    void statusHandler(req, res);
-  });
-  app.all('/api/auth/setup', (req, res) => {
-    void setupHandler(req, res);
-  });
-  app.all('/api/auth/login', (req, res) => {
-    void loginHandler(req, res);
-  });
-  app.all('/api/auth/logout', (req, res) => {
-    void logoutHandler(req, res);
-  });
-  app.all('/api/portfolio', (req, res) => {
-    void portfolioHandler(req, res);
-  });
-  app.all('/api/inquiries', (req, res) => {
-    void inquiriesHandler(req, res);
+  // Mount unified API handler matching Vercel Serverless routing
+  app.all('/api/*', (req, res) => {
+    void apiHandler(req, res);
   });
 
   if (process.env.NODE_ENV !== 'production') {

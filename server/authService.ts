@@ -1,4 +1,7 @@
 import crypto from 'node:crypto';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
 interface ClaimedAdminRecord {
@@ -26,8 +29,42 @@ const globalState = globalThis as unknown as {
   __ariesLoginFailures?: Map<string, { count: number; resetAt: number }>;
 };
 
+const CLAIM_STORE_PATH = path.join(os.tmpdir(), 'aries-portfolio-admin-claim.json');
+
+function readClaimedAdmin(): ClaimedAdminRecord | null {
+  if (globalState.__ariesClaimedAdmin) {
+    return globalState.__ariesClaimedAdmin;
+  }
+  try {
+    if (fs.existsSync(CLAIM_STORE_PATH)) {
+      const parsed = JSON.parse(fs.readFileSync(CLAIM_STORE_PATH, 'utf8')) as Partial<ClaimedAdminRecord>;
+      if (parsed.username && parsed.salt && parsed.hashHex) {
+        const record: ClaimedAdminRecord = {
+          username: parsed.username,
+          salt: parsed.salt,
+          hashHex: parsed.hashHex,
+        };
+        globalState.__ariesClaimedAdmin = record;
+        return record;
+      }
+    }
+  } catch {
+    // Ignore unreadable temp store
+  }
+  return null;
+}
+
+function writeClaimedAdmin(record: ClaimedAdminRecord): void {
+  globalState.__ariesClaimedAdmin = record;
+  try {
+    fs.writeFileSync(CLAIM_STORE_PATH, JSON.stringify(record), { encoding: 'utf8', mode: 0o600 });
+  } catch {
+    // Ignore read-only fs errors
+  }
+}
+
 if (globalState.__ariesClaimedAdmin === undefined) {
-  globalState.__ariesClaimedAdmin = null;
+  globalState.__ariesClaimedAdmin = readClaimedAdmin();
 }
 if (!globalState.__ariesInquiriesStore) {
   globalState.__ariesInquiriesStore = [];
@@ -54,7 +91,7 @@ export function isEnvAdminConfigured(): boolean {
 
 export function getAuthState() {
   const envConfigured = isEnvAdminConfigured();
-  const hasClaimed = globalState.__ariesClaimedAdmin !== null;
+  const hasClaimed = readClaimedAdmin() !== null;
   return {
     configured: envConfigured || hasClaimed,
     needsSetup: !envConfigured && !hasClaimed,
@@ -160,7 +197,7 @@ export function claimInitialAdmin(
 
   const salt = crypto.randomBytes(16).toString('hex');
   const hashHex = hashPasswordWithSalt(password, salt);
-  globalState.__ariesClaimedAdmin = { username, salt, hashHex };
+  writeClaimedAdmin({ username, salt, hashHex });
 
   const session = createSessionToken(username);
   return {
@@ -238,8 +275,9 @@ export function authenticateAdmin(
     return { ok: true, username: envUser, token: session.token, expiresAt: session.expiresAt };
   }
 
-  if (globalState.__ariesClaimedAdmin) {
-    const record = globalState.__ariesClaimedAdmin;
+  const claimed = readClaimedAdmin();
+  if (claimed) {
+    const record = claimed;
     const candidateHash = hashPasswordWithSalt(password, record.salt);
     const userOk = constantTimeEqual(username, record.username);
     const passOk = constantTimeEqual(candidateHash, record.hashHex);
