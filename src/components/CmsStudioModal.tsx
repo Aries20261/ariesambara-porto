@@ -8,6 +8,7 @@ import {
   FileJson,
   FileSpreadsheet,
   Inbox,
+  LogOut,
   Monitor,
   Plus,
   RotateCcw,
@@ -40,10 +41,12 @@ interface CmsStudioModalProps {
   isOpen: boolean;
   data: PortfolioData;
   inquiries: InquiryItem[];
+  adminUsername?: string;
   onClose: () => void;
   onPublish: (nextData: PortfolioData) => void;
   onResetDefault: () => void;
   onOpenCropper: () => void;
+  onLogout: () => void;
 }
 
 type StudioTab = 'profile' | 'experiences' | 'works' | 'education_skills' | 'bulk' | 'inbox';
@@ -80,10 +83,12 @@ export const CmsStudioModal: React.FC<CmsStudioModalProps> = ({
   isOpen,
   data,
   inquiries,
+  adminUsername,
   onClose,
   onPublish,
   onResetDefault,
   onOpenCropper,
+  onLogout,
 }) => {
   const [draft, setDraft] = useState<PortfolioData>(data);
   const [activeTab, setActiveTab] = useState<StudioTab>('profile');
@@ -348,6 +353,19 @@ export const CmsStudioModal: React.FC<CmsStudioModalProps> = ({
             >
               <Check className="w-3.5 h-3.5" />
               <span>Simpan & Terbitkan</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                onLogout();
+                onClose();
+              }}
+              title={adminUsername ? `Keluar (${adminUsername})` : 'Keluar Admin'}
+              className="py-2 px-3 rounded-lg border border-white/15 text-xs font-medium text-neutral-300 hover:text-white hover:border-white/30 inline-flex items-center gap-1.5 cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Keluar</span>
             </button>
 
             <button

@@ -1,14 +1,17 @@
 import React from 'react';
-import { Download, MapPin, SlidersHorizontal } from 'lucide-react';
+import { Download, Lock, LogOut, MapPin, SlidersHorizontal } from 'lucide-react';
 import { ProfileData } from '../types/portfolio';
 import { AvatarFrame } from './AvatarFrame';
 
 interface SidebarProps {
   profile: ProfileData;
   activeSection: string;
+  isAuthenticated: boolean;
+  adminUsername?: string;
   onNavigate: (sectionId: string) => void;
   onOpenCms: () => void;
-  onOpenCropper: () => void;
+  onOpenCropper?: () => void;
+  onLogout: () => void;
   onDownloadCv: () => void;
 }
 
@@ -24,9 +27,12 @@ const NAV_ITEMS = [
 export const Sidebar: React.FC<SidebarProps> = ({
   profile,
   activeSection,
+  isAuthenticated,
+  adminUsername,
   onNavigate,
   onOpenCms,
   onOpenCropper,
+  onLogout,
   onDownloadCv,
 }) => {
   return (
@@ -91,15 +97,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Studio CMS & Bulk Importer Trigger */}
-      <div className="pt-5 border-t border-[rgba(212,175,55,0.18)]">
+      <div className="pt-5 border-t border-[rgba(212,175,55,0.18)] space-y-2">
         <button
           type="button"
           onClick={onOpenCms}
           className="w-full py-2.5 px-4 rounded-lg bg-[#181C22] hover:bg-[#1F252E] border border-[rgba(212,175,55,0.3)] text-xs font-semibold text-neutral-200 hover:text-[#F3E5AB] transition-colors inline-flex items-center justify-center gap-2 cursor-pointer"
         >
-          <SlidersHorizontal className="w-3.5 h-3.5 text-[#D4AF37]" />
-          <span>CMS & Bulk Importer</span>
+          {isAuthenticated ? (
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#D4AF37]" />
+          ) : (
+            <Lock className="w-3.5 h-3.5 text-[#D4AF37]" />
+          )}
+          <span>{isAuthenticated ? `Kelola CMS (${adminUsername || 'Admin'})` : 'Login & Kelola CMS'}</span>
         </button>
+
+        {isAuthenticated && (
+          <button
+            type="button"
+            onClick={onLogout}
+            className="w-full py-2 px-3 rounded-lg border border-white/10 text-[11px] font-medium text-neutral-400 hover:text-white hover:border-white/25 transition-colors inline-flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Kunci Sesi Admin</span>
+          </button>
+        )}
       </div>
     </aside>
   );

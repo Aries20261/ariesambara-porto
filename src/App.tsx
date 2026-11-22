@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Download, Menu, SlidersHorizontal, X } from 'lucide-react';
+import { Download, Lock, LogOut, Menu, SlidersHorizontal, X } from 'lucide-react';
 import { DEFAULT_PORTFOLIO_DATA } from './data/defaultPortfolio';
 import { InquiryItem, PortfolioData } from './types/portfolio';
 import { Sidebar } from './components/Sidebar';
 import { PortfolioContent } from './components/PortfolioContent';
 import { ImageCropperModal } from './components/ImageCropperModal';
 import { CmsStudioModal } from './components/CmsStudioModal';
+import { AdminAuthModal } from './components/AdminAuthModal';
 import { AvatarFrame } from './components/AvatarFrame';
 import { downloadTextFile } from './utils/dataValidation';
 
@@ -13,6 +14,12 @@ const STORAGE_KEY_PORTFOLIO = 'aries_ambara_portfolio_v1';
 const STORAGE_KEY_INQUIRIES = 'aries_ambara_inquiries_v1';
 
 const SECTION_IDS = ['about', 'connect', 'experience', 'education', 'skills', 'works'];
+
+interface AdminSession {
+  token: string;
+  username: string;
+  expiresAt: number;
+}
 
 export default function App() {
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(() => {
@@ -43,12 +50,17 @@ export default function App() {
     return [];
   });
 
+  // Admin session stored strictly in React memory (never persisted in localStorage/sessionStorage)
+  const [adminSession, setAdminSession] = useState<AdminSession | null>(null);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState<'cms' | 'cropper' | null>(null);
+
   const [activeSection, setActiveSection] = useState<string>('about');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cmsOpen, setCmsOpen] = useState(false);
   const [cropperOpen, setCropperOpen] = useState(false);
 
-  // Persist portfolio data
+  // Persist portfolio data locally for offline resilience
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_PORTFOLIO, JSON.stringify(portfolioData));
@@ -57,7 +69,7 @@ export default function App() {
     }
   }, [portfolioData]);
 
-  // Persist inquiries
+  // Persist inquiries locally
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_INQUIRIES, JSON.stringify(inquiries));
@@ -65,6 +77,20 @@ export default function App() {
       // Ignore quota errors
     }
   }, [inquiries]);
+
+  // Load server-stored portfolio if available on initial mount
+  useEffect(() => {
+    fetch('/api/portfolio')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((payload: { portfolio?: PortfolioData | null } | null) => {
+        if (payload?.portfolio && payload.portfolio.profile && Array.isArray(payload.portfolio.experiences)) {
+          setPortfolioData(payload.portfolio);
+        }
+      })
+      .catch(() => {
+        // Ignore offline/serverless fallback
+      });
+  }, []);
 
   // Track active section while scrolling
   useEffect(() => {
@@ -87,6 +113,92 @@ export default function App() {
     return () => observer.disconnect();
   }, []);
 
+  const isSessionValid = Boolean(adminSession && adminSession.expiresAt > Date.now());
+
+  const requestOpenCms = () => {
+    setMobileMenuOpen(false);
+    if (isSessionValid) {
+      setCmsOpen(true);
+    } else {
+      setAdminSession(null);
+      setPendingAction('cms');
+      setAuthModalOpen(true);
+    }
+  };
+
+  const requestOpenCropper = () => {
+    setMobileMenuOpen(false);
+    if (isSessionValid) {
+      setCropperOpen(true);
+    } else {
+      setAdminSession(null);
+      setPendingAction('cropper');
+      setAuthModalOpen(true);
+    }
+  };
+
+  const handleAuthenticated = (session: AdminSession) => {
+    setAdminSession(session);
+    setAuthModalOpen(false);
+
+    // Sync inquiries from server once authenticated
+    fetch('/api/inquiries', {
+      headers: { Authorization: `Bearer ${session.token}` },
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((payload: { inquiries?: InquiryItem[] } | null) => {
+        if (Array.isArray(payload?.inquiries) && payload.inquiries.length > 0) {
+          setInquiries((prev) => {
+            const seen = new Set(prev.map((i) => i.id));
+            const merged = [...prev];
+            for (const item of payload.inquiries!) {
+              if (!seen.has(item.id)) merged.push(item);
+            }
+            return merged;
+          });
+        }
+      })
+      .catch(() => {
+        // Ignore
+      });
+
+    if (pendingAction === 'cropper') {
+      setCropperOpen(true);
+    } else {
+      setCmsOpen(true);
+    }
+    setPendingAction(null);
+  };
+
+  const handleLogout = () => {
+    setAdminSession(null);
+    setCmsOpen(false);
+    setCropperOpen(false);
+    void fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+  };
+
+  const syncPortfolioToServer = async (nextData: PortfolioData) => {
+    if (!adminSession) return;
+    try {
+      const res = await fetch('/api/portfolio', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${adminSession.token}`,
+        },
+        body: JSON.stringify({ portfolio: nextData }),
+      });
+      if (res.status === 401) {
+        setAdminSession(null);
+        setCmsOpen(false);
+        setPendingAction('cms');
+        setAuthModalOpen(true);
+      }
+    } catch {
+      // Offline/local state already updated
+    }
+  };
+
   const handleNavigate = (sectionId: string) => {
     setActiveSection(sectionId);
     setMobileMenuOpen(false);
@@ -97,14 +209,28 @@ export default function App() {
   };
 
   const handleApplyCroppedAvatar = (webpDataUrl: string) => {
-    setPortfolioData((prev) => ({
-      ...prev,
-      profile: {
-        ...prev.profile,
-        avatar_url: webpDataUrl,
-        avatar_aspect_ratio: '1:1',
-      },
-    }));
+    setPortfolioData((prev) => {
+      const next: PortfolioData = {
+        ...prev,
+        profile: {
+          ...prev.profile,
+          avatar_url: webpDataUrl,
+          avatar_aspect_ratio: '1:1',
+        },
+      };
+      void syncPortfolioToServer(next);
+      return next;
+    });
+  };
+
+  const handlePublishCms = (nextData: PortfolioData) => {
+    setPortfolioData(nextData);
+    void syncPortfolioToServer(nextData);
+  };
+
+  const handleResetDefault = () => {
+    setPortfolioData(DEFAULT_PORTFOLIO_DATA);
+    void syncPortfolioToServer(DEFAULT_PORTFOLIO_DATA);
   };
 
   const handleSubmitInquiry = (
@@ -120,6 +246,12 @@ export default function App() {
       routed_to: portfolioData.profile.email,
     };
     setInquiries((prev) => [newItem, ...prev]);
+
+    void fetch('/api/inquiries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).catch(() => {});
   };
 
   const handleDownloadCv = () => {
@@ -246,11 +378,15 @@ export default function App() {
         <div className="flex items-center gap-3 shrink-0">
           <button
             type="button"
-            onClick={() => setCmsOpen(true)}
+            onClick={requestOpenCms}
             className="hidden sm:inline-flex py-2 px-4 rounded-lg gold-action-btn text-xs font-bold whitespace-nowrap shrink-0 items-center gap-1.5 transition-all cursor-pointer"
           >
-            <SlidersHorizontal className="w-3.5 h-3.5" />
-            <span>Kelola CMS</span>
+            {isSessionValid ? (
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+            ) : (
+              <Lock className="w-3.5 h-3.5" />
+            )}
+            <span>{isSessionValid ? 'Kelola CMS' : 'Login Admin'}</span>
           </button>
 
           <button
@@ -272,10 +408,7 @@ export default function App() {
               avatarUrl={portfolioData.profile.avatar_url}
               name={portfolioData.profile.name}
               sizeClass="w-20 h-20"
-              onEditClick={() => {
-                setMobileMenuOpen(false);
-                setCropperOpen(true);
-              }}
+              onEditClick={isSessionValid ? requestOpenCropper : undefined}
             />
             <div>
               <div className="font-display text-lg font-bold text-white">
@@ -309,15 +442,28 @@ export default function App() {
           <div className="pt-4 space-y-3">
             <button
               type="button"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                setCmsOpen(true);
-              }}
+              onClick={requestOpenCms}
               className="w-full py-3 px-4 rounded-lg gold-action-btn text-xs font-bold inline-flex items-center justify-center gap-2 cursor-pointer"
             >
-              <SlidersHorizontal className="w-4 h-4" />
-              <span>Buka CMS & Bulk Importer</span>
+              {isSessionValid ? (
+                <SlidersHorizontal className="w-4 h-4" />
+              ) : (
+                <Lock className="w-4 h-4" />
+              )}
+              <span>{isSessionValid ? 'Buka CMS & Bulk Importer' : 'Login Admin (CMS)'}</span>
             </button>
+
+            {isSessionValid && (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="w-full py-2.5 px-4 rounded-lg border border-white/15 text-xs font-medium text-neutral-300 inline-flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Kunci Sesi Admin</span>
+              </button>
+            )}
+
             <button
               type="button"
               onClick={handleDownloadCv}
@@ -335,9 +481,12 @@ export default function App() {
         <Sidebar
           profile={portfolioData.profile}
           activeSection={activeSection}
+          isAuthenticated={isSessionValid}
+          adminUsername={adminSession?.username}
           onNavigate={handleNavigate}
-          onOpenCms={() => setCmsOpen(true)}
-          onOpenCropper={() => setCropperOpen(true)}
+          onOpenCms={requestOpenCms}
+          onOpenCropper={isSessionValid ? requestOpenCropper : undefined}
+          onLogout={handleLogout}
           onDownloadCv={handleDownloadCv}
         />
 
@@ -345,7 +494,7 @@ export default function App() {
           <PortfolioContent
             data={portfolioData}
             onSubmitInquiry={handleSubmitInquiry}
-            onOpenCropper={() => setCropperOpen(true)}
+            onOpenCropper={isSessionValid ? requestOpenCropper : undefined}
             onDownloadCv={handleDownloadCv}
           />
 
@@ -357,10 +506,10 @@ export default function App() {
             <div className="flex items-center gap-4">
               <button
                 type="button"
-                onClick={() => setCmsOpen(true)}
+                onClick={requestOpenCms}
                 className="text-[#D4AF37] hover:text-[#F3E5AB] transition-colors cursor-pointer"
               >
-                Kelola Data (CMS & Bulk Import)
+                {isSessionValid ? 'Kelola Data (CMS & Bulk Import)' : 'Login Admin'}
               </button>
               <span aria-hidden="true">·</span>
               <a href="#about" className="hover:text-neutral-300 transition-colors">
@@ -371,22 +520,34 @@ export default function App() {
         </main>
       </div>
 
-      {/* Interactive 1:1 Image Cropper & WebP Optimizer Modal */}
+      {/* Admin Authentication Gate Modal */}
+      <AdminAuthModal
+        isOpen={authModalOpen}
+        onClose={() => {
+          setAuthModalOpen(false);
+          setPendingAction(null);
+        }}
+        onAuthenticated={handleAuthenticated}
+      />
+
+      {/* Interactive 1:1 Image Cropper & WebP Optimizer Modal (Admin Only) */}
       <ImageCropperModal
-        isOpen={cropperOpen}
+        isOpen={cropperOpen && isSessionValid}
         onClose={() => setCropperOpen(false)}
         onApply={handleApplyCroppedAvatar}
       />
 
-      {/* Manual CMS & Bulk JSON/CSV Importer Studio */}
+      {/* Manual CMS & Bulk JSON/CSV Importer Studio (Admin Only) */}
       <CmsStudioModal
-        isOpen={cmsOpen}
+        isOpen={cmsOpen && isSessionValid}
         data={portfolioData}
         inquiries={inquiries}
+        adminUsername={adminSession?.username}
         onClose={() => setCmsOpen(false)}
-        onPublish={(nextData) => setPortfolioData(nextData)}
-        onResetDefault={() => setPortfolioData(DEFAULT_PORTFOLIO_DATA)}
-        onOpenCropper={() => setCropperOpen(true)}
+        onPublish={handlePublishCms}
+        onResetDefault={handleResetDefault}
+        onOpenCropper={requestOpenCropper}
+        onLogout={handleLogout}
       />
     </div>
   );
